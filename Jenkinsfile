@@ -1,34 +1,22 @@
 pipeline {
-    triggers {
-  pollSCM('* * * * *')
-    }
-     agent any
-     tools {
+    agent any
+    tools{
         maven 'M2_HOME'
-     }
+    }
     stages {
-        stage('maven package') {
-        steps {
-             sh 'mvn clean'
-             sh 'mvn install'
-             sh 'mvn package'
-        }
-    }
-          stage('Test') {
-        steps {
-            sh 'mvn clean'
-        }
-    }
-       stage('test') {
-            steps {
-                echo 'test'
-                
+        stage('Checkout'){
+            steps{
+                git branch: 'main', url: 'https://github.com/Donah1/geolocation.git'
             }
         }
-          stage('deploy') {
+        stage('Code Build') {
             steps {
-                echo 'deploymentS'
-                
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
     }
